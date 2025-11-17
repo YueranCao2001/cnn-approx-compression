@@ -16,17 +16,20 @@ Experiments are run on **ResNet-18** trained on **CIFAR-10** using PyTorch.
 We recommend using Anaconda.
 
 # Create and activate a new environment
-```conda create -n approx_cnn python=3.10 -y```
+```conda create -n approx_cnn python=3.9 -y```
 
 ```conda activate approx_cnn```
 
 # Install PyTorch (CPU-only example; replace with CUDA version if you have a GPU)
-```conda install -y pytorch torchvision torchaudio cpuonly -c pytorch -c conda-forge```
+```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
+
+# if you don't have
+```pip install torch torchvision torchaudio```
 
 # Extra packages
-```conda install -y matplotlib```
+```pip install numpy tqdm```
 
-```pip install tqdm```
+```conda install matplotlib -y```
 
 # Clone or place this repo in your working directory, then move into it:
 ```cd cnn-approx-compression```
