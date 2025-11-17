@@ -20,10 +20,10 @@ We recommend using Anaconda.
 
 ```conda activate approx_cnn```
 
-# Install PyTorch (CPU-only example; replace with CUDA version if you have a GPU)
+# Install PyTorch (CUDA version if you have a GPU)
 ```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
 
-# if you don't have
+# if you don't have, use the CPU version
 ```pip install torch torchvision torchaudio```
 
 # Extra packages
