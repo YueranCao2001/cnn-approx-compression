@@ -1,13 +1,18 @@
 # Approximate Computing for CNN Compression
 
-This repository implements a small experimental framework to study **approximate computing techniques** for CNN compression, inspired by the *Deep Compression* paper (Han et al., ICLR 2016).  
-We compare three model variants:
+This repository implements an experimental framework to study **approximate computing techniques** for CNN compression, inspired by *Deep Compression* (Han et al., ICLR 2016).
 
-1. **Baseline FP32 model** (no approximation)  
-2. **Pruned FP32 model** (global unstructured pruning + fine-tuning)  
-3. **Pruned + INT8 model** (pruning + dynamic quantization)
+We evaluate how pruning, quantization, and model architecture choices affect the trade-off between:
 
-Experiments are run on **ResNet-18** trained on **CIFAR-10** using PyTorch.
+&#9679; **Accuracy**
+
+&#9679; **Model size**
+
+&#9679; **Inference latency**
+
+&#9679; **Layer-wise sparsity**
+
+Experiments are conducted on **ResNet-18** and **MobileNetV2**, using **CIFAR-10** and **CIFAR-100** datasets.
 
 ---
 
@@ -20,10 +25,11 @@ We recommend using Anaconda.
 
 ```conda activate approx_cnn```
 
-# Install PyTorch (CUDA version if you have a GPU)
+# Install PyTorch
+## CUDA (if available)
 ```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
 
-# if you don't have, use the CPU version
+## CPU version
 ```pip install torch torchvision torchaudio```
 
 # Extra packages
@@ -38,163 +44,335 @@ We recommend using Anaconda.
 
 ```cnn-approx-compression/```
 
-```├── data/```                     # CIFAR-10 will be downloaded here automatically
+```├── data/```                     # CIFAR-10/100 datasets, generate automatically if you run related code
 
-```├── models/```                   # Saved model checkpoints (.pth)
+```├── models/```                   # Saved .pth checkpoints
 
-```├── results/```                  # Plots (accuracy, size, latency)
+```├── results/```                  # Result plots
 
-```├── scripts/```
-
-```|      ├── train_baseline.py```     # Train baseline ResNet-18 on CIFAR-10
-
-```|      ├── prune_model.py```        # Apply global pruning + fine-tuning
-
-```|      ├── quantize_model.py```     # Apply dynamic INT8 quantization
-
-```|      ├── eval_model.py```         # Print accuracy, size, and latency
-
-```|      └── plot_results.py```       # Generate result plots into results/
+```├── scripts/```                  # Training, pruning, quantization, evaluation
 
 ```└── README.md```
 
 
 ## 3. Pipeline Overview
 The full experimental pipeline is:
-1. Train baseline ResNet-18 (FP32)
-2. Apply global unstructured pruning + fine-tuning
-3. Apply dynamic INT8 quantization to the pruned model
-4. Evaluate accuracy, model size, and inference latency
-5. Visualize the trade-offs using plots
+(1). Train baseline CNN (ResNet-18, MobileNetV2) on CIFAR-10 / CIFAR-100
+(2). Apply **global unstructured pruning**
+(3). Fine-tune pruned models
+(4). Optionally apply **dynamic INT8 quantization**
+(5). Evaluate accuracy, model size, and latency
+(6). Summarize and visualize results
 
-Each step corresponds to one script in scripts/
+Each step corresponds to one script in ```scripts/```
 
 # 4. Running the Experiments
 ## 4.1 Train the Baseline Model
-### Purpose:
-Train a standard FP32 ResNet-18 on CIFAR-10. This model serves as the baseline for all comparisons.
 
-```conda activate approx_cnn```
+```python scripts/train_resnet18_c10_baseline.py```
 
-```python scripts/train_baseline.py```
+```python scripts/train_mobilenetv2_c10_baseline.py```
 
-### What it does:
-Downloads CIFAR-10 into data/ (if not already present)
+### Outputs:
 
-Trains ResNet-18 for a fixed number of epochs
+```models/resnet18_c10_base.pth```
 
-Tracks test accuracy and saves the best model to: ```models/resnet18_base.pth```
-
-This checkpoint is the starting point for pruning and quantization.
+```models/mobilenetv2_c10_base.pth```
 
 ## 4.2 Prune the Baseline Model
-### Purpose:
-Apply global unstructured pruning to reduce the number of non-zero weights, then fine-tune to recover accuracy.
-```python scripts/prune_model.py```
 
-### What it does:
+```python scripts/prune_resnet18_c10_prune50.py```
 
-Loads ```models/resnet18_base.pth```
+```python scripts/prune_mobilenetv2_c10_prune50.py```
 
-Applies global L1-unstructured pruning to all Conv2d and Linear layers
+### Pruning mechanism:
 
-Fine-tunes the pruned model for a few epochs
+&#9679; Global L1 unstructured pruning
 
-Removes pruning reparameterization and saves the final pruned weights to: ```models/resnet18_pruned.pth```
+&#9679; Applied to Conv + Linear layers
 
-### Notes:
-The state_dict is still stored in FP32 format, so the file size on disk does not change, but the effective number of non-zero weights is reduced.
+&#9679; Followed by fine-tuning
+
+&#9679; Pruning masks removed before saving final checkpoint
 
 ## 4.3 Quantize the Pruned Model (INT8)
-### Purpose:
-Apply dynamic quantization to convert Linear layers from FP32 to INT8, on top of the pruned model.
 
-```python scripts/quantize_model.py```
+```python scripts/quantize_resnet18_c10_int8.py```
 
-### What it does:
-Loads ```models/resnet18_pruned.pth```
+&#9679; Applies dynamic quantization to Linear layers
 
-Uses torch.quantization.quantize_dynamic to quantize nn.Linear layers to INT8
+&#9679; Produces: ```models/resnet18_c10_pruned50_int8.pth```
 
-Evaluates the pruned FP32 and pruned+INT8 models on CIFAR-10
+## 4.4 Evaluation
 
-Saves the full quantized model object to: ```models/resnet18_pruned_int8.pth```
+```python scripts/eval_resnet18_c10_all.py```
 
-### Now we have three model variants:
-```resnet18_base.pth``` – Baseline FP32
+```python scripts/eval_mobilenetv2_c10_all.py```
 
-```resnet18_pruned.pth``` – Pruned FP32
+```python scripts/eval_resnet18_c100_all.py```
 
-```resnet18_pruned_int8.pth``` – Pruned + INT8 quantized
+### Metrics include:
 
+&#9679; Test accuracy (CPU)
 
-## 4.4 Evaluate Accuracy, Size, and Latency
+&#9679; On-disk model size
 
-### Purpose:
-Compare the three models under common metrics.
-```python scripts/eval_model.py```
+&#9679; Average inference time per image (CPU)
 
-### What it prints:
-Accuracy on CIFAR-10 (CPU) for each model
+## 4.5 Visualization
 
-File size (MB) of each checkpoint
+```python scripts/viz_resnet18_c10_results.py```
 
-Average inference time per image (ms, CPU) using a dummy input
+```python scripts/viz_mobilenetv2_c10_results.py```
 
+```python scripts/viz_resnet18_vs_mobilenetv2_c10.py```
 
-## 4.5 Generate Plots
-### Purpose:
-Create visual summaries of the experimental results.
+All images are saved in: ```results/```
 
-```python scripts/plot_results.py```
+# 5. Results and Analysis
 
-### What it does:
-Collects metrics (accuracy, size, latency) for the three models
+Below is a comprehensive summary of all experiments, structured per model and dataset.
 
-Generates the following plots in the results/ folder:
+## Section A — MobileNetV2 on CIFAR-10
 
-```accuracy_bar.png – accuracy comparison (bar chart)```
+### Accuracy vs Model Size
 
-```size_bar.png – model size comparison (bar chart)```
+<img src="mobilenetv2_c10_prune50_fp32_acc_vs_size.png" width="550">
 
-```accuracy_vs_size.png – accuracy vs model size (scatter plot)```
+#### Analysis
 
-```latency_bar.png – CPU latency comparison (bar chart)```
+&#9679; Pruning improves accuracy from ```65.3%``` → ```80.2%```, a surprising but well-known effect when pruning removes noisy or redundant weights.
 
+&#9679; Model size stays almost unchanged (8.769 → 8.770 MB) because PyTorch stores dense FP32 tensors even after pruning.
 
-# 5. What “Baseline”, “Pruned”, and “Pruned + INT8” Mean
+### Accuracy Comparison
 
-## Baseline FP32
-A standard ResNet-18 trained on CIFAR-10 with 32-bit floating-point weights.
+<img src="mobilenetv2_c10_prune50_fp32_accuracy.png" width="550">
 
-Represents the uncompressed / non-approximate model.
+#### Analysis
 
-Used as the reference point for accuracy, storage, and latency.
+&#9679; The +15% absolute accuracy jump indicates MobileNetV2 is **highly overparameterized** for CIFAR-10.
 
+&#9679; Pruning forces a form of regularization, helping generalization.
 
-## Pruned FP32
-Same architecture as the baseline, but many weights are set to zero via global unstructured pruning.
+### Latency Comparison
 
-Fine-tuning is applied to recover accuracy after pruning.
+<img src="mobilenetv2_c10_prune50_fp32_latency.png" width="550">
 
-Reduces the number of effective parameters, but in this implementation the FP32 state_dict is still stored densely, so on-disk size does not shrink.
+#### Analysis
 
+&#9679; Latency slightly decreases (4.922 → 4.818 ms).
 
-## Pruned + INT8
-Starts from the pruned model and applies dynamic INT8 quantization to Linear layers.
+&#9679; Because PyTorch does not exploit sparsity, the gain is due to reduced effective FLOPs, not sparse kernels.
 
-Further reduces arithmetic precision for part of the model.
+### Model Size Comparison
 
-In our experiments, this typically causes only a small drop in accuracy, if any.
+<img src="mobilenetv2_c10_prune50_fp32_modelsize.png" width="550">
 
+#### Analysis
 
-Together, these three variants allow us to study the trade-off between accuracy, model complexity, and runtime cost, which is precisely the goal described in our project proposal and mid-term report.
+&#9679; As expected, size remains unchanged due to dense storage format.
+
+&#9679; True compression would require sparse serialization or Huffman coding.
+
+## Section B — ResNet-18 on CIFAR-10 (Baseline, Prune 50%, Prune 50% + INT8)
+
+### Accuracy vs Size
+
+<img src="resnet18_c10_prune50_int8_acc_vs_size.png" width="550">
+
+#### Analysis
+
+&#9679; Baseline accuracy: ```74.5%```
+
+&#9679; Pruned (50%): ```81.6%```
+
+&#9679; Pruned + INT8: ```81.6%``` (no drop)
+
+INT8 quantization preserves pruned performance, because only fully-connected layers are quantized—convolutions dominate compute.
+
+### Accuracy Bar
+
+<img src="resnet18_c10_prune50_int8_accuracy.png" width="550">
+
+#### Analysis
+
+&#9679; Same trend as above; pruning improves generalization.
+
+&#9679; INT8 quantization does not harm accuracy.
+
+### Latency Bar
+
+<img src="resnet18_c10_prune50_int8_latency.png" width="550">
+
+#### Analysis
+
+&#9679; INT8 version incurs slightly higher latency (2.438 → 2.605 ms).
+
+&#9679; PyTorch dynamic quantization is CPU-oriented and may add overhead for small models.
+
+### Model Size Bar
+
+<img src="resnet18_c10_prune50_int8_modelsize.png" width="550">
+
+#### Analysis
+
+&#9679; INT8 slightly reduces state_dict size (42.7314 → 42.7288 MB).
+
+&#9679; Again, PyTorch stores dense tensors, so compression is limited.
+
+## Section C — ResNet-18 Pruning Sweep (0 / 30 / 50 / 70%)
+
+### Accuracy vs Pruning Ratio
+
+<img src="resnet18_c10_prunesweep_accuracy_vs_ratio.png" width="550">
+
+#### Analysis
+
+##### Accuracy increases monotonically:
+
+&#9679; 0% → 74.5%
+
+&#9679; 30% → 82.5%
+
+&#9679; 50% → 81.6%
+
+&#9679; 70% → ```83.0%``` (best)
+
+##### Indicates strong overparameterization and robustness.
+
+### Latency vs Ratio
+
+<img src="resnet18_c10_prunesweep_latency_vs_ratio.png" width="550">
+
+#### Analysis
+
+&#9679; Latency varies slightly (2.341–2.475 ms) with no consistent trend.
+
+&#9679; PyTorch kernels do not accelerate sparse convolutions.
+
+### Model Size vs Ratio
+
+<img src="resnet18_c10_prunesweep_modelsize_vs_ratio.png" width="550">
+
+#### Analysis
+
+&#9679; All sizes ≈ 42.73 MB, confirming dense storage.
+
+### Sparsity CSV Observations
+
+Across 30/50/70% pruning:
+
+&#9679; Early layers remain dense
+
+&#9679; Deeper 3×3 convolutions gain high sparsity
+
+&#9679; FC layer sparsity roughly matches pruning target
+
+This matches standard global pruning dynamics.
+
+## Section D — ResNet-18 on CIFAR-100 (Baseline vs Pruned 50%)
+
+### Accuracy vs Size
+
+<img src="resnet18_c100_prune50_fp32_acc_vs_size.png" width="550">
+
+#### Analysis
+
+&#9679; Pruned accuracy dramatically increases: ```42.9%``` → ```56.4%```
+
+&#9679; Similar to CIFAR-10, pruning removes redundancy.
+
+### Accuracy Bar
+
+<img src="resnet18_c100_prune50_fp32_accuracy.png" width="550">
+
+### Latency Bar
+
+<img src="resnet18_c100_prune50_fp32_latency.png" width="550">
+
+#### Analysis
+
+&#9679; Pruned model slightly faster (2.620 → 2.589 ms).
+
+&#9679; Variation is small.
+
+### Model Size Bar
+
+<img src="resnet18_c100_prune50_fp32_modelsize.png" width="550">
+
+#### Analysis
+
+&#9679; Dense storage again limits compression.
+
+## Section E — ResNet-18 vs MobileNetV2 (CIFAR-10)
+
+### Accuracy Comparison
+
+<img src="resnet18_vs_mnetv2_c10_prune50_accuracy.png" width="550">
+
+#### Analysis
+
+##### Both models gain significant accuracy from pruning:
+
+&#9679; ResNet-18: 74.5% → 81.6%
+
+&#9679; MobileNetV2: 65.3% → 80.2%
+
+##### MobileNetV2 catches up to ResNet-18 after pruning.
+
+### Latency Comparison
+
+<img src="resnet18_vs_mnetv2_c10_prune50_latency.png" width="550">
+
+#### Analysis
+
+&#9679; MobileNetV2 is naturally slower on CPU (depthwise separable ops → lower parallelism).
+
+&#9679; ResNet-18 remains ~2.4 ms, MobileNetV2 ~4.5 ms.
+
+### Model Size Comparison
+
+<img src="resnet18_vs_mnetv2_c10_prune50_modelsize.png" width="550">
+
+#### Analysis
+
+&#9679; ResNet-18: ~42.7 MB
+
+&#9679; MobileNetV2: ~8.77 MB
+
+&#9679; Significant architectural footprint difference.
 
 # 6. Notes and Limitations
 
-The current implementation focuses on unstructured pruning and dynamic quantization in PyTorch.
+(1). PyTorch stores pruned tensors **densely**, so file size does not change.
 
-We do not implement Huffman coding or sparse storage formats, so compressed on-disk size is not reduced as aggressively as in the original Deep Compression paper.
+(2). PyTorch dynamic INT8 quantization only affects Linear layers.
 
-All evaluation scripts run on CPU by default for reproducibility and easier comparison.
+(3). No sparse kernels → pruning does **not** accelerate inference.
 
+(4). True compression (Deep Compression) requires:
+
+&#9679; Sparse matrix formats
+
+&#9679; Weight sharing
+
+&#9679; Huffman coding
+
+# 7. Conclusion
+
+This project systematically evaluates approximate computing techniques (pruning + quantization) on two CNN architectures and two datasets.
+
+## Key findings:
+
+&#9679; Moderate-to-high unstructured pruning consistently improves accuracy (regularization effect).
+
+&#9679; INT8 quantization preserves accuracy but provides limited compression for CNNs dominated by conv layers.
+
+&#9679; Model size remains unchanged without sparse serialization.
+
+&#9679; CPU latency shows minimal variation because PyTorch kernels do not exploit sparsity.
+
+&#9679; MobileNetV2 benefits even more from pruning compared to ResNet-18.
+
+These findings provide a strong baseline for understanding approximate computing trade-offs in modern CNNs.
