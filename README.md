@@ -137,7 +137,7 @@ Below is a comprehensive summary of all experiments, structured per model and da
 
 ### Accuracy vs Model Size
 
-<img src="mobilenetv2_c10_prune50_fp32_acc_vs_size.png" width="550">
+<img src="results/mobilenetv2_c10_prune50_fp32_acc_vs_size.png" width="550">
 
 #### Analysis
 
@@ -147,7 +147,7 @@ Below is a comprehensive summary of all experiments, structured per model and da
 
 ### Accuracy Comparison
 
-<img src="mobilenetv2_c10_prune50_fp32_accuracy.png" width="550">
+<img src="results/mobilenetv2_c10_prune50_fp32_accuracy.png" width="550">
 
 #### Analysis
 
@@ -157,7 +157,7 @@ Below is a comprehensive summary of all experiments, structured per model and da
 
 ### Latency Comparison
 
-<img src="mobilenetv2_c10_prune50_fp32_latency.png" width="550">
+<img src="results/mobilenetv2_c10_prune50_fp32_latency.png" width="550">
 
 #### Analysis
 
@@ -167,7 +167,7 @@ Below is a comprehensive summary of all experiments, structured per model and da
 
 ### Model Size Comparison
 
-<img src="mobilenetv2_c10_prune50_fp32_modelsize.png" width="550">
+<img src="results/mobilenetv2_c10_prune50_fp32_modelsize.png" width="550">
 
 #### Analysis
 
@@ -179,7 +179,7 @@ Below is a comprehensive summary of all experiments, structured per model and da
 
 ### Accuracy vs Size
 
-<img src="resnet18_c10_prune50_int8_acc_vs_size.png" width="550">
+<img src="results/resnet18_c10_prune50_int8_acc_vs_size.png" width="550">
 
 #### Analysis
 
@@ -193,7 +193,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Accuracy Bar
 
-<img src="resnet18_c10_prune50_int8_accuracy.png" width="550">
+<img src="results/resnet18_c10_prune50_int8_accuracy.png" width="550">
 
 #### Analysis
 
@@ -203,7 +203,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Latency Bar
 
-<img src="resnet18_c10_prune50_int8_latency.png" width="550">
+<img src="results/resnet18_c10_prune50_int8_latency.png" width="550">
 
 #### Analysis
 
@@ -213,7 +213,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Model Size Bar
 
-<img src="resnet18_c10_prune50_int8_modelsize.png" width="550">
+<img src="results/resnet18_c10_prune50_int8_modelsize.png" width="550">
 
 #### Analysis
 
@@ -225,7 +225,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Accuracy vs Pruning Ratio
 
-<img src="resnet18_c10_prunesweep_accuracy_vs_ratio.png" width="550">
+<img src="results/resnet18_c10_prunesweep_accuracy_vs_ratio.png" width="550">
 
 #### Analysis
 
@@ -243,7 +243,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Latency vs Ratio
 
-<img src="resnet18_c10_prunesweep_latency_vs_ratio.png" width="550">
+<img src="results/resnet18_c10_prunesweep_latency_vs_ratio.png" width="550">
 
 #### Analysis
 
@@ -253,7 +253,7 @@ INT8 quantization preserves pruned performance, because only fully-connected lay
 
 ### Model Size vs Ratio
 
-<img src="resnet18_c10_prunesweep_modelsize_vs_ratio.png" width="550">
+<img src="results/resnet18_c10_prunesweep_modelsize_vs_ratio.png" width="550">
 
 #### Analysis
 
@@ -275,7 +275,7 @@ This matches standard global pruning dynamics.
 
 ### Accuracy vs Size
 
-<img src="resnet18_c100_prune50_fp32_acc_vs_size.png" width="550">
+<img src="results/resnet18_c100_prune50_fp32_acc_vs_size.png" width="550">
 
 #### Analysis
 
@@ -285,11 +285,11 @@ This matches standard global pruning dynamics.
 
 ### Accuracy Bar
 
-<img src="resnet18_c100_prune50_fp32_accuracy.png" width="550">
+<img src="results/resnet18_c100_prune50_fp32_accuracy.png" width="550">
 
 ### Latency Bar
 
-<img src="resnet18_c100_prune50_fp32_latency.png" width="550">
+<img src="results/resnet18_c100_prune50_fp32_latency.png" width="550">
 
 #### Analysis
 
@@ -299,7 +299,7 @@ This matches standard global pruning dynamics.
 
 ### Model Size Bar
 
-<img src="resnet18_c100_prune50_fp32_modelsize.png" width="550">
+<img src="results/resnet18_c100_prune50_fp32_modelsize.png" width="550">
 
 #### Analysis
 
@@ -309,7 +309,7 @@ This matches standard global pruning dynamics.
 
 ### Accuracy Comparison
 
-<img src="resnet18_vs_mnetv2_c10_prune50_accuracy.png" width="550">
+<img src="results/resnet18_vs_mnetv2_c10_prune50_accuracy.png" width="550">
 
 #### Analysis
 
@@ -323,7 +323,7 @@ This matches standard global pruning dynamics.
 
 ### Latency Comparison
 
-<img src="resnet18_vs_mnetv2_c10_prune50_latency.png" width="550">
+<img src="results/resnet18_vs_mnetv2_c10_prune50_latency.png" width="550">
 
 #### Analysis
 
@@ -333,7 +333,7 @@ This matches standard global pruning dynamics.
 
 ### Model Size Comparison
 
-<img src="resnet18_vs_mnetv2_c10_prune50_modelsize.png" width="550">
+<img src="results/resnet18_vs_mnetv2_c10_prune50_modelsize.png" width="550">
 
 #### Analysis
 
