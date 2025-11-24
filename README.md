@@ -25,31 +25,31 @@ Experiments are conducted on **ResNet-18** and **MobileNetV2**, using **CIFAR-10
 - [Notes and Limitations](#6-notes-and-limitations)
 - [Conclusion](#7-conclusion)
 
-## 1. Environment Setup
+# 1. Environment Setup
 
 We recommend using Anaconda.
 
-# Create and activate a new environment
+## Create and activate a new environment
 ```conda create -n approx_cnn python=3.9 -y```
 
 ```conda activate approx_cnn```
 
-# Install PyTorch
-## CUDA (if available)
+## Install PyTorch
+### CUDA (if available)
 ```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
 
-## CPU version
+### CPU version
 ```pip install torch torchvision torchaudio```
 
-# Extra packages
+## Extra packages
 ```pip install numpy tqdm```
 
 ```conda install matplotlib -y```
 
-# Clone or place this repo in your working directory, then move into it:
+## Clone or place this repo in your working directory, then move into it:
 ```cd cnn-approx-compression```
 
-## 2. Project Structure
+# 2. Project Structure
 
 ```
 cnn-approx-compression/
@@ -60,7 +60,7 @@ cnn-approx-compression/
 └── README.md
 ```
 
-## 3. Pipeline Overview
+# 3. Pipeline Overview
 The full experimental pipeline is:
 (1). Train baseline CNN (ResNet-18, MobileNetV2) on CIFAR-10 / CIFAR-100
 (2). Apply **global unstructured pruning**
