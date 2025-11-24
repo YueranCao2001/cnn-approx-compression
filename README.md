@@ -16,6 +16,15 @@ Experiments are conducted on **ResNet-18** and **MobileNetV2**, using **CIFAR-10
 
 ---
 
+# Table of Contents
+- [Environment Setup](#1-environment-setup)
+- [Project Structure](#2-project-structure)
+- [Pipeline Overview](#3-pipeline-overview)
+- [Running the Experiments](#4-running-the-experiments)
+- [Results and Analysis](#5-results-and-analysis)
+- [Notes and Limitations](#6-notes-and-limitations)
+- [Conclusion](#7-conclusion)
+
 ## 1. Environment Setup
 
 We recommend using Anaconda.
@@ -42,18 +51,14 @@ We recommend using Anaconda.
 
 ## 2. Project Structure
 
-```cnn-approx-compression/```
-
-```├── data/```                     # CIFAR-10/100 datasets, generate automatically if you run related code
-
-```├── models/```                   # Saved .pth checkpoints
-
-```├── results/```                  # Result plots
-
-```├── scripts/```                  # Training, pruning, quantization, evaluation
-
-```└── README.md```
-
+```
+cnn-approx-compression/
+├── data/                     # CIFAR-10/100 datasets, generate automatically if you run related code
+├── models/                   # Saved .pth checkpoints
+├── results/                  # Result plots
+├── scripts/                  # Training, pruning, quantization, evaluation
+└── README.md
+```
 
 ## 3. Pipeline Overview
 The full experimental pipeline is:
