@@ -45,11 +45,20 @@ Experiments are conducted on **ResNet-18** and **MobileNetV2**, using **CIFAR-10
 
 We recommend using Anaconda.
 
-## Create and activate a new environment
-```conda create -n approx_cnn python=3.9 -y```
+# Create and activate a new environment
+```
+conda create -n approx_cnn python=3.9 -y
+conda activate approx_cnn
+```
 
-```conda activate approx_cnn```
+# Option A — Install from ```requirements.txt``` (recommended for reproducibility)
+```
+pip install -r requirements.txt
+```
 
+**Note**: PyTorch is not included in requirements.txt because CUDA users must install it manually. Install PyTorch separately following the instructions below.
+
+# Option B — Manual installation
 ## Install PyTorch
 ### CUDA (if available)
 ```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
@@ -58,12 +67,16 @@ We recommend using Anaconda.
 ```pip install torch torchvision torchaudio```
 
 ## Extra packages
-```pip install numpy tqdm```
-
-```conda install matplotlib -y```
+```
+pip install numpy tqdm
+conda install matplotlib -y
+```
 
 ## Clone or place this repo in your working directory, then move into it:
-```cd cnn-approx-compression```
+```
+git clone https://github.com/YueranCao2001/cnn-approx-compression
+cd cnn-approx-compression
+```
 
 # 2. Project Structure
 
