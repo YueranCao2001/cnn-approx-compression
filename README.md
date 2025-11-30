@@ -1,5 +1,20 @@
 # Approximate Computing for CNN Compression
 
+![python](https://img.shields.io/badge/python-3.9+-blue.svg)
+![pytorch](https://img.shields.io/badge/PyTorch-Framework-red.svg)
+![task](https://img.shields.io/badge/task-Model%20Compression-yellow.svg)
+![dataset](https://img.shields.io/badge/dataset-CIFAR10%2FCIFAR100-green.svg)
+![model](https://img.shields.io/badge/model-ResNet18%20%7C%20MobileNetV2-blueviolet.svg)
+![status](https://img.shields.io/badge/status-Course%20Project-orange.svg)
+![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+
+> **TL;DR:**  
+> This repository implements a clean and reproducible pipeline for studying **approximate computing** on CNNs, including **global pruning**, **fine-tuning**, and **dynamic INT8 quantization**.  
+> Experiments cover **ResNet-18** and **MobileNetV2** on **CIFAR-10** and **CIFAR-100**, with analysis of accuracy, model size, latency, and sparsity.  
+> Pruning consistently improves generalization (sometimes +15%), while INT8 quantization preserves accuracy with minimal overhead.
+
+--------
+
 This repository implements an experimental framework to study **approximate computing techniques** for CNN compression, inspired by *Deep Compression* (Han et al., ICLR 2016).
 
 We evaluate how pruning, quantization, and model architecture choices affect the trade-off between:
@@ -24,6 +39,7 @@ Experiments are conducted on **ResNet-18** and **MobileNetV2**, using **CIFAR-10
 - [Results and Analysis](#5-results-and-analysis)
 - [Notes and Limitations](#6-notes-and-limitations)
 - [Conclusion](#7-conclusion)
+- [Citation](#8-citation)
 
 # 1. Environment Setup
 
@@ -381,3 +397,31 @@ This project systematically evaluates approximate computing techniques (pruning 
 &#9679; MobileNetV2 benefits even more from pruning compared to ResNet-18.
 
 These findings provide a strong baseline for understanding approximate computing trade-offs in modern CNNs.
+
+# 8. Citation
+
+If you use this repository or build upon its code or analysis, please cite:
+
+```bibtex
+@misc{cao2025approxcnn,
+    title  = {Approximate Computing for CNN Compression: A Study of Pruning and INT8 Quantization on ResNet-18 and MobileNetV2},
+    author = {Cao, Yueran and Wang, Zinian and Chen, Chang and Li, Tian},
+    year   = {2025},
+    note   = {Course Project, Georgetown University},
+}
+```
+
+This project is also inspired by:
+
+```bibtex
+@misc{han2016deepcompressioncompressingdeep,
+      title={Deep Compression: Compressing Deep Neural Networks with Pruning, Trained Quantization and Huffman Coding}, 
+      author={Song Han and Huizi Mao and William J. Dally},
+      year={2016},
+      eprint={1510.00149},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/1510.00149}, 
+}
+```
+
